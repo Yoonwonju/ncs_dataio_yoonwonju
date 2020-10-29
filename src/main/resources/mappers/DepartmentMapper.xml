@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ncs_dataio_yoonwonju.mapper.DepartmentMapper">
+	<resultMap type="Department" id="DepartmentResult">
+		<id property="deptNo" column="deptno"/>				<!-- 기본키에는 id 로 적어주기도 한다. 좋은건 없음 -->
+		<result property="deptName" column="deptName"/>
+		<result property="floor" column="floor"/>
+	</resultMap>
+	
+	<sql id="selectSQL">
+		SELECT DEPTNO,DEPTNAME,FLOOR FROM DEPARTMENT
+	</sql>
+	
+	<sql id="whereSQL">
+		<where>
+			<if test="deptNo != null">
+				deptno = #{deptNo}
+			</if>
+		</where>
+	</sql>
+	
+	<sql id="setSQL">
+		<set>
+			<if test="deptName != null">
+				deptname = #{deptName},
+			</if>
+			<if test="floor != null">
+				floor = #{floor}
+			</if>
+		</set>
+	</sql>
+	
+	<select id="selectDepartmentByAll" resultMap="DepartmentResult">
+		<include refid="selectSQL"/>
+	</select>
+	
+	<select id="selectDepartmentByNo" resultMap="DepartmentResult">
+		<include refid="selectSQL"/>
+		<include refid="whereSQL"/>
+	</select>
+	
+	<insert id="insertDepartment" parameterType="Department">
+		INSERT INTO DEPARTMENT (DEPTNO,DEPTNAME,FLOOR)
+		VALUES(#{deptNo}, #{deptName}, #{floor})
+	</insert>
+	
+	<update id="updateDepartment" parameterType="Department">
+		UPDATE DEPARTMENT
+		<include refid="setSQL"/>
+		<include refid="whereSQL"/>
+	</update>
+	
+	<delete id="deleteDepartment" parameterType="Department">
+		DELETE FROM DEPARTMENT
+		<include refid="whereSQL"/>
+	</delete>
+</mapper>
